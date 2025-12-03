@@ -32,7 +32,7 @@
                     <td>{{ $usuario->id }}</td>
                     <td>{{ $usuario->nombre }}</td>
                     <td>{{ $usuario->telefono }}</td>
-                    <td>{{ $usuario->created_at->format('d/m/Y') }}</td>
+                    <td>{{ $usuario->created_at?->format('d/m/Y H:i:s') ?? 'N/A' }}</td>
                     <td class="actions">
                         <a href="{{ route('usuarios.edit', $usuario->id) }}" class="btn btn-secondary btn-sm" title="Editar">
                             <i class="fas fa-edit"></i>
