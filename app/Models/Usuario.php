@@ -3,15 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable; // <-- Importación crucial
 
-class Usuario extends Model
+// Cambia 'extends Model' a 'extends Authenticatable'
+class Usuario extends Authenticatable
 {
     use HasFactory;
 
     protected $table = 'usuario';
 
     protected $fillable = ['nombre', 'telefono', 'password'];
+
+    // Ocultar la contraseña al serializar el modelo
+    protected $hidden = [
+        'password',
+    ];
 
     // Relación: Un usuario tiene muchas parcelas
     public function parcelas() {

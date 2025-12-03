@@ -13,22 +13,17 @@
 
 <div class="app-container">
 
-    <header class="app-header">
-        <div class="logo">
-            <i class="fas fa-seedling"></i> <span>NutriFarm</span>
-        </div>
+    <div class="user-info">
+        <i class="fas fa-user-circle"></i>
+        <span class="user-name">{{ Auth::user()->nombre ?? 'Invitado' }}</span>
 
-        <div class="user-info">
-            <i class="fas fa-user-circle"></i>
-            <span class="user-name">Usuario Actual (Ej. Juan Pérez)</span>
-
-            <form action="#" method="POST" class="logout-form">
-                <button type="submit" title="Cerrar Sesión">
-                    <i class="fas fa-sign-out-alt"></i> Salir
-                </button>
-            </form>
-        </div>
-    </header>
+        <form action="{{ route('logout') }}" method="POST" class="logout-form">
+            @csrf
+            <button type="submit" title="Cerrar Sesión">
+                <i class="fas fa-sign-out-alt"></i> Salir
+            </button>
+        </form>
+    </div>
 
     <nav class="app-sidebar">
         <ul class="menu">
