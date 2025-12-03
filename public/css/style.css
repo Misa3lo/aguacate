@@ -1,0 +1,181 @@
+/* PALETA DE COLORES INSPIRADA EN LA NATURALEZA */
+:root {
+    --color-primary: #38761d; /* Verde Oscuro Formal (Tierra/Bosque) */
+    --color-secondary: #6aa84f; /* Verde Medio (Follaje) */
+    --color-accent: #78a309; /* Verde Lima (Acento fresco) */
+    --color-background: #f0f4f0; /* Fondo Blanco-Verdoso Suave */
+    --color-text: #333333; /* Texto Oscuro */
+    --color-white: #ffffff;
+    --color-shadow: rgba(0, 0, 0, 0.1);
+
+    /* Estados */
+    --color-success: #28a745;
+    --color-error: #dc3545;
+}
+
+/* -------------------------------------- */
+/* ESTRUCTURA GENERAL Y LAYOUT FIJO (GRID) */
+/* -------------------------------------- */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: var(--color-text);
+    background-color: var(--color-background);
+}
+
+.app-container {
+    /* Define la estructura GRID:
+       Columna 1: Sidebar fija (220px)
+       Columna 2: Contenido principal (el resto) */
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    grid-template-rows: auto 1fr; /* Fila 1: Header, Fila 2: Contenido */
+    height: 100vh;
+}
+
+/* -------------------------------------- */
+/* HEADER (Fijo Superior) */
+/* -------------------------------------- */
+.app-header {
+    grid-column: 1 / 3; /* Ocupa ambas columnas (sidebar + contenido) */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--color-white);
+    box-shadow: 0 2px 4px var(--color-shadow);
+    z-index: 100; /* Asegura que esté por encima de otros elementos */
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--color-primary);
+}
+
+.logo i {
+    margin-right: 8px;
+    color: var(--color-accent);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-info i {
+    margin-right: 5px;
+    color: var(--color-secondary);
+}
+
+.user-name {
+    margin-right: 15px;
+    font-weight: 600;
+}
+
+.logout-form button {
+    background-color: var(--color-error);
+    color: var(--color-white);
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    font-weight: 600;
+}
+
+.logout-form button:hover {
+    background-color: #c82333;
+}
+
+/* -------------------------------------- */
+/* SIDEBAR (Menú Fijo Izquierdo) */
+/* -------------------------------------- */
+.app-sidebar {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    padding-top: 20px;
+    overflow-y: auto; /* Permite desplazamiento si el menú es largo */
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu-item a {
+    display: block;
+    padding: 12px 20px;
+    color: var(--color-white);
+    text-decoration: none;
+    transition: background-color 0.3s;
+    font-size: 0.95rem;
+}
+
+.menu-item a:hover {
+    background-color: var(--color-secondary);
+}
+
+.menu-item i {
+    margin-right: 10px;
+    width: 15px;
+}
+
+.menu-divider {
+    color: rgba(255, 255, 255, 0.6);
+    padding: 15px 20px 5px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+/* -------------------------------------- */
+/* CONTENIDO PRINCIPAL */
+/* -------------------------------------- */
+.app-content {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    padding: 30px;
+    overflow-y: auto; /* Permite desplazamiento del contenido */
+}
+
+.app-content h1 {
+    color: var(--color-primary);
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: 10px;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+/* -------------------------------------- */
+/* ESTILOS DE ALERTAS (Mensajes Flash) */
+/* -------------------------------------- */
+.alert {
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.alert i {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.success-alert {
+    background-color: #d4edda;
+    color: var(--color-success);
+    border: 1px solid var(--color-success);
+}
+
+.error-alert {
+    background-color: #f8d7da;
+    color: var(--color-error);
+    border: 1px solid var(--color-error);
+}
