@@ -11,12 +11,12 @@ use App\Models\RevisionParcela;
 class ParcelaElementoController extends Controller
 {
     public function index()
-    {
-        // Obtenemos los muestreos, cargando las relaciones para mostrar nombres
-        $muestreos = ParcelaElemento::with(['parcela', 'elemento', 'revision'])
-            ->get();
-        return view('parcela_elementos.index', compact('muestreos'));
-    }
+{
+    // Cargar las muestras y precargar las relaciones
+    $muestreos = ParcelaElemento::with(['parcela', 'elemento', 'revision'])->get(); 
+
+    return view('parcela_elementos.index', compact('muestreos'));
+}
 
     public function create()
     {
