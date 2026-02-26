@@ -3,71 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nutrientes Parcela | @yield('title')</title>
+    <title>KBI Diagnóstico | @yield('title')</title>
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
-<body>
+<body style="background-color: var(--color-background);">
 
-<div class="app-container">
+<div class="container-fluid p-0">
+    <div class="d-flex">
 
-    <div class="user-info">
-        <i class="fas fa-user-circle"></i>
-        <span class="user-name">{{ Auth::user()->nombre ?? 'Invitado' }}</span>
+        <nav class="sidebar d-flex flex-column p-0" style="width: 260px;">
+            <div class="user-info-box p-4 d-flex justify-content-between align-items-center">
+                <div class="text-truncate">
+                    <i class="fas fa-user-circle fa-2x align-middle me-2"></i>
+                    <span class="fw-bold">{{ Auth::user()->nombre ?? 'Invitado' }}</span>
+                </div>
+                <form action="{{ route('logout') ?? '#' }}" method="POST" class="m-0">
+                    @csrf
+                    <button type="submit" class="btn btn-sm btn-outline-danger border-0 p-1 rounded-circle" title="Cerrar Sesión">
+                        <i class="fas fa-power-off fa-lg text-white"></i>
+                    </button>
+                </form>
+            </div>
 
-        <form action="{{ route('logout') }}" method="POST" class="logout-form">
-            @csrf
-            <button type="submit" title="Cerrar Sesión">
-                <i class="fas fa-sign-out-alt"></i> Salir
-            </button>
-        </form>
+            <ul class="nav nav-pills flex-column mb-auto p-3">
+                <li class="nav-item">
+                    <a href="{{ route('inicio') ?? '#' }}" class="nav-link {{ request()->routeIs('inicio') ? 'active' : '' }}">
+                        <i class="fas fa-home me-2"></i> Inicio
+                    </a>
+                </li>
+
+                <li class="menu-divider mt-4 mb-2">Datos Base</li>
+                <li><a href="{{ route('usuarios.index') ?? '#' }}" class="nav-link"><i class="fas fa-users me-2"></i> Dueños</a></li>
+                <li><a href="{{ route('elementos.index') ?? '#' }}" class="nav-link"><i class="fas fa-flask me-2"></i> Nutrientes</a></li>
+                <li><a href="{{ route('referencias.index') ?? '#' }}" class="nav-link"><i class="fas fa-balance-scale me-2"></i> Referencias KBI</a></li>
+
+                <li class="menu-divider mt-4 mb-2">Operación</li>
+                <li><a href="{{ route('parcelas.index') ?? '#' }}" class="nav-link"><i class="fas fa-map-marked-alt me-2"></i> Huertos</a></li>
+                <li><a href="{{ route('muestreos.index') ?? '#' }}" class="nav-link"><i class="fas fa-vial me-2"></i> Ingreso Muestras</a></li>
+
+                <li class="menu-divider mt-4 mb-2">Resultados</li>
+                <li><a href="{{ route('analisis.index') ?? '#' }}" class="nav-link"><i class="fas fa-chart-line me-2"></i> Análisis Kenworthy</a></li>
+                <li><a href="{{ route('recomendaciones.index') ?? '#' }}" class="nav-link"><i class="fas fa-lightbulb me-2"></i> Recomendaciones</a></li>
+            </ul>
+        </nav>
+
+        <main class="flex-grow-1 p-4 overflow-auto" style="height: 100vh;">
+            <div class="d-flex justify-content-between align-items-center pb-3 mb-4 border-bottom">
+                <h1 class="h3 fw-bold text-dark">@yield('title')</h1>
+            </div>
+
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                    <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
+            <div class="bg-white p-4 rounded shadow-sm">
+                @yield('content')
+            </div>
+        </main>
+
     </div>
+</div>
 
-    <nav class="app-sidebar">
-        <ul class="menu">
-            <li class="menu-item"><a href="{{ route('inicio') }}"><i class="fas fa-home"></i> Inicio</a></li>
-
-            <li class="menu-divider">Datos Base</li>
-            <li class="menu-item"><a href="{{ route('usuarios.index') }}"><i class="fas fa-users"></i> Dueños</a></li>
-            <li class="menu-item"><a href="{{ route('elementos.index') }}"><i class="fas fa-flask"></i> Nutrientes</a></li>
-            <li class="menu-item"><a href="{{ route('referencias.index') }}"><i class="fas fa-balance-scale"></i> Referencias</a></li>
-
-            <li class="menu-divider">Operación y Muestreo</li>
-            <li class="menu-item"><a href="{{ route('parcelas.index') }}"><i class="fas fa-map-marked-alt"></i> Parcelas</a></li>
-            <li class="menu-item"><a href="{{ route('revisiones.index') }}"><i class="fas fa-calendar-check"></i> Revisiones</a></li>
-            <li class="menu-item"><a href="{{ route('muestreos.index') }}"><i class="fas fa-vial"></i> Ingreso Muestras</a></li>
-
-            <li class="menu-divider">Resultados</li>
-            <li class="menu-item"><a href="{{ route('analisis.index') }}"><i class="fas fa-chart-line"></i> Análisis</a></li>
-            <li class="menu-item"><a href="{{ route('recomendaciones.index') }}"><i class="fas fa-lightbulb"></i> Recomendaciones</a></li>
-        </ul>
-    </nav>
-
-    <main class="app-content">
-        <h1>@yield('title')</h1>
-
-        @if (session('success'))
-            <div class="alert success-alert">
-                <i class="fas fa-check-circle"></i> {{ session('success') }}
-            </div>
-        @endif
-
-        @if ($errors->any())
-            <div class="alert error-alert">
-                <i class="fas fa-exclamation-triangle"></i> Por favor, corrija los siguientes errores:
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        @yield('content')
-    </main>
-
-</div> @yield('scripts')
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+@yield('scripts')
 </body>
 </html>

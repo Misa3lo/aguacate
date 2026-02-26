@@ -1,76 +1,66 @@
 @extends('layouts.app')
 
-@section('title', 'Resultados del Análisis de Elementos')
+@section('title', 'Resultados: Índice de Kenworthy')
 
 @section('content')
 
     @if ($analisis->isEmpty())
         <div class="empty-state">
-            <p><i class="fas fa-exclamation-circle"></i> No hay análisis registrados aún.</p>
-            <p>Los análisis se generan automáticamente una vez que se procesan los valores de las muestras y las referencias.</p>
+            <i class="fas fa-microscope"></i>
+            <h3>No hay análisis generados</h3>
+            <p>Calcula los índices ingresando primero los valores en "Ingreso de Muestras".</p>
+            <a href="{{ route('muestreos.index') }}" class="btn btn-primary mt-3">Ir a Muestreos</a>
         </div>
     @else
-        <table class="data-table">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Muestra ID</th>
-                <th>Índice Kenworthy</th>
-                <th>Nivel de Suficiencia</th>
-                <th>Necesidad de Aplicación</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach ($analisis as $item)
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
                 <tr>
-                    <td>{{ $item->id }}</td>
-                    <td>{{ $item->parcela_elemento_id }}</td>
-                    <td>{{ number_format($item->ind_kenworthy, 4) }}</td>
-
-                    <td>
-                        @php
-                            $class = '';
-                            if ($item->nivel_suficiencia == 'bajo') {
-                                $class = 'badge-danger';
-                            } elseif ($item->nivel_suficiencia == 'normal') {
-                                $class = 'badge-success';
-                            } else {
-                                $class = 'badge-warning';
-                            }
-                        @endphp
-                        <span class="badge {{ $class }}">{{ strtoupper($item->nivel_suficiencia) }}</span>
-                    </td>
-
-                    <td>
-                        @php
-                            $class = $item->necesidad_aplicacion == 'aplicar' ? 'badge-error' : 'badge-primary';
-                        @endphp
-                        <span class="badge {{ $class }}">{{ strtoupper($item->necesidad_aplicacion) }}</span>
-                    </td>
+                    <th>ID</th>
+                    <th>Muestra / Elemento</th>
+                    <th>Índice Kenworthy</th>
+                    <th>Estado Nutricional</th>
+                    <th>Recomendación</th>
                 </tr>
-            @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                @foreach ($analisis as $item)
+                    <tr>
+                        <td><strong>#{{ $item->id }}</strong></td>
+                        <td>
+                            <i class="fas fa-leaf text-success"></i>
+                            {{ $item->parcela_elemento_id }} </td>
+                        <td class="fw-bold text-center">
+                            {{ number_format($item->ind_kenworthy, 2) }}
+                        </td>
+                        <td>
+                            @php
+                                // Lógica de colores basada en el índice
+                                $nivel = strtolower($item->nivel_suficiencia);
+                                $bgNivel = 'bg-normal';
+                                if($nivel == 'bajo' || $nivel == 'deficiente') $bgNivel = 'bg-bajo';
+                                if($nivel == 'alto' || $nivel == 'exceso') $bgNivel = 'bg-alto';
+                            @endphp
+                            <span class="badge {{ $bgNivel }}">
+                                    {{ $item->nivel_suficiencia }}
+                                </span>
+                        </td>
+                        <td>
+                            @if(strtolower($item->necesidad_aplicacion) == 'aplicar')
+                                <span class="badge bg-aplicar">
+                                        <i class="fas fa-hand-holding-droplet"></i> APLICAR
+                                    </span>
+                            @else
+                                <span class="badge bg-no-aplicar">
+                                        SIN ACCIÓN
+                                    </span>
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
     @endif
-@endsection
 
-@section('scripts')
-    <style>
-        .badge {
-            display: inline-block;
-            padding: 0.35em 0.65em;
-            font-size: 0.75em;
-            font-weight: 700;
-            line-height: 1;
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: baseline;
-            border-radius: 0.25rem;
-        }
-        .badge-success { background-color: var(--color-success); color: white; }
-        .badge-danger { background-color: var(--color-error); color: white; }
-        .badge-warning { background-color: orange; color: white; }
-        .badge-primary { background-color: var(--color-primary); color: white; }
-        .badge-error { background-color: var(--color-error); color: white; }
-    </style>
 @endsection

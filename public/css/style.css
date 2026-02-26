@@ -1,104 +1,72 @@
-/* PALETA DE COLORES INSPIRADA EN LA NATURALEZA */
+/* PALETA DE COLORES AGUACATE HASS */
 :root {
-    --color-primary: #38761d; /* Verde Oscuro Formal (Tierra/Bosque) */
-    --color-secondary: #6aa84f; /* Verde Medio (Follaje) */
-    --color-accent: #78a309; /* Verde Lima (Acento fresco) */
-    --color-background: #f0f4f0; /* Fondo Blanco-Verdoso Suave */
-    --color-text: #333333; /* Texto Oscuro */
+    --color-primary: #38761d;    /* Verde Oscuro (Cáscara/Tierra) */
+    --color-secondary: #6aa84f;  /* Verde Medio (Pulpa/Follaje) */
+    --color-accent: #78a309;     /* Verde Lima (Detalles) */
+    --color-background: #f0f4f0; /* Fondo Grisáceo-Verdoso */
+    --color-text: #333333;
     --color-white: #ffffff;
     --color-shadow: rgba(0, 0, 0, 0.1);
-
-    /* Estados */
     --color-success: #28a745;
     --color-error: #dc3545;
 }
 
 /* -------------------------------------- */
-/* ESTRUCTURA GENERAL Y LAYOUT FIJO (GRID) */
+/* ESTRUCTURA GENERAL (GRID) */
 /* -------------------------------------- */
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
     margin: 0;
     padding: 0;
     color: var(--color-text);
     background-color: var(--color-background);
+    overflow: hidden; /* Evita scroll doble con el contenedor */
 }
 
 .app-container {
-    /* Define la estructura GRID:
-       Columna 1: Sidebar fija (220px)
-       Columna 2: Contenido principal (el resto) */
     display: grid;
-    grid-template-columns: 220px 1fr;
-    grid-template-rows: auto 1fr; /* Fila 1: Header, Fila 2: Contenido */
+    grid-template-columns: 240px 1fr; /* Sidebar un poco más ancho */
+    grid-template-rows: 60px 1fr;    /* Altura fija del Header */
     height: 100vh;
 }
 
 /* -------------------------------------- */
-/* HEADER (Fijo Superior) */
+/* HEADER */
 /* -------------------------------------- */
 .app-header {
-    grid-column: 1 / 3; /* Ocupa ambas columnas (sidebar + contenido) */
+    grid-column: 1 / 3;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+    padding: 0 25px;
     background-color: var(--color-white);
-    box-shadow: 0 2px 4px var(--color-shadow);
-    z-index: 100; /* Asegura que esté por encima de otros elementos */
+    box-shadow: 0 2px 10px var(--color-shadow);
+    z-index: 100;
 }
 
 .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
+    font-size: 1.3rem;
+    font-weight: 800;
     color: var(--color-primary);
-}
-
-.logo i {
-    margin-right: 8px;
-    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .user-info {
     display: flex;
     align-items: center;
-}
-
-.user-info i {
-    margin-right: 5px;
-    color: var(--color-secondary);
-}
-
-.user-name {
-    margin-right: 15px;
-    font-weight: 600;
-}
-
-.logout-form button {
-    background-color: var(--color-error);
-    color: var(--color-white);
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-    font-weight: 600;
-}
-
-.logout-form button:hover {
-    background-color: #c82333;
+    gap: 15px;
 }
 
 /* -------------------------------------- */
-/* SIDEBAR (Menú Fijo Izquierdo) */
+/* SIDEBAR */
 /* -------------------------------------- */
 .app-sidebar {
     grid-column: 1 / 2;
-    grid-row: 2 / 3;
     background-color: var(--color-primary);
     color: var(--color-white);
-    padding-top: 20px;
-    overflow-y: auto; /* Permite desplazamiento si el menú es largo */
+    padding-top: 10px;
+    overflow-y: auto;
 }
 
 .menu {
@@ -108,27 +76,30 @@ body {
 }
 
 .menu-item a {
-    display: block;
-    padding: 12px 20px;
-    color: var(--color-white);
+    display: flex;
+    align-items: center;
+    padding: 14px 25px;
+    color: #e0e0e0;
     text-decoration: none;
-    transition: background-color 0.3s;
-    font-size: 0.95rem;
+    transition: all 0.3s;
+    font-size: 0.9rem;
 }
 
 .menu-item a:hover {
     background-color: var(--color-secondary);
+    color: white;
+    padding-left: 30px;
 }
 
 .menu-item i {
-    margin-right: 10px;
-    width: 15px;
+    width: 25px;
+    font-size: 1.1rem;
 }
 
 .menu-divider {
-    color: rgba(255, 255, 255, 0.6);
-    padding: 15px 20px 5px;
-    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
+    padding: 20px 25px 5px;
+    font-size: 0.7rem;
     text-transform: uppercase;
     font-weight: bold;
 }
@@ -138,160 +109,26 @@ body {
 /* -------------------------------------- */
 .app-content {
     grid-column: 2 / 3;
-    grid-row: 2 / 3;
-    padding: 30px;
-    overflow-y: auto; /* Permite desplazamiento del contenido */
+    padding: 40px;
+    overflow-y: auto;
 }
 
 .app-content h1 {
+    font-size: 1.8rem;
     color: var(--color-primary);
-    border-bottom: 2px solid var(--color-accent);
-    padding-bottom: 10px;
-    margin-top: 0;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 /* -------------------------------------- */
-/* ESTILOS DE ALERTAS (Mensajes Flash) */
+/* ESTILOS PARA TABLAS (Sincronizado con HTML) */
 /* -------------------------------------- */
-.alert {
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-}
-
-.alert i {
-    margin-right: 10px;
-    font-size: 1.2rem;
-}
-
-.success-alert {
-    background-color: #d4edda;
-    color: var(--color-success);
-    border: 1px solid var(--color-success);
-}
-
-.error-alert {
-    background-color: #f8d7da;
-    color: var(--color-error);
-    border: 1px solid var(--color-error);
-}
-/* --- ESTILOS PARA FORMULARIOS --- */
-.card-form {
-    background-color: var(--color-white);
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px var(--color-shadow);
-    max-width: 600px;
-    margin: 20px 0;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: var(--color-primary);
-    font-size: 0.95rem;
-}
-
-.form-group input,
-.form-group select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box; /* Incluye padding y borde en el ancho total */
-    font-size: 1rem;
-    transition: border-color 0.3s;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-    border-color: var(--color-accent);
-    outline: none;
-}
-
-.error-message {
-    color: var(--color-error);
-    font-size: 0.85rem;
-    margin-top: 5px;
-}
-
-.form-actions {
-    margin-top: 30px;
-    display: flex;
-    gap: 10px;
-}
-
-
-/* --- ESTILOS PARA BOTONES GENÉRICOS --- */
-.btn {
-    padding: 10px 15px;
-    text-decoration: none;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    font-weight: 600;
-    font-size: 0.9rem;
-    display: inline-flex;
-    align-items: center;
-}
-
-.btn i {
-    margin-right: 5px;
-}
-
-.btn-primary {
-    background-color: var(--color-primary);
-    color: var(--color-white);
-}
-.btn-primary:hover {
-    background-color: #2e6018;
-}
-
-.btn-secondary {
-    background-color: #6c757d;
-    color: var(--color-white);
-}
-.btn-secondary:hover {
-    background-color: #5a6268;
-}
-
-.btn-danger {
-    background-color: var(--color-error);
-    color: var(--color-white);
-}
-.btn-danger:hover {
-    background-color: #c82333;
-}
-
-.btn-sm {
-    padding: 5px 10px;
-    font-size: 0.8rem;
-}
-
-/* --- ESTILOS PARA TABLAS DE DATOS --- */
-.action-bar {
-    margin-bottom: 20px;
-    text-align: right;
-}
-
 .data-table {
     width: 100%;
     border-collapse: collapse;
     background-color: var(--color-white);
-    box-shadow: 0 2px 4px var(--color-shadow);
-    border-radius: 8px;
-    overflow: hidden;
-    margin-top: 20px;
+    border-radius: 10px;
+    overflow: hidden; /* Para que el radio se aplique al thead */
+    box-shadow: 0 4px 15px var(--color-shadow);
 }
 
 .data-table thead {
@@ -299,26 +136,361 @@ body {
     color: var(--color-white);
 }
 
-.data-table th, .data-table td {
-    padding: 12px 15px;
+.data-table th {
+    padding: 15px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.data-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
 }
 
 .data-table tbody tr:hover {
-    background-color: #f5f5f5;
+    background-color: #f9fff9;
 }
 
-.data-table .actions {
+/* Estilo para inputs dentro de tablas */
+.data-table input {
+    width: 80px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* BOTONES Y ALERTAS */
+.btn {
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.success-alert {
+    background-color: #d4edda;
+    color: var(--color-success);
+    border-left: 5px solid var(--color-success);
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+/* --- ESTILOS ESPECÍFICOS PARA LOGIN --- */
+.login-page {
     display: flex;
-    gap: 5px;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--color-background);
+    margin: 0;
 }
 
+.login-container {
+    background-color: var(--color-white);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px var(--color-shadow);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-container .logo {
+    font-size: 3rem;
+    color: var(--color-primary);
+    margin-bottom: 10px;
+}
+
+.login-container h1 {
+    color: var(--color-primary);
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+.btn-login {
+    width: 100%;
+    justify-content: center;
+    padding: 12px;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+/* Ajuste para los iconos dentro de los labels del login */
+.login-container .form-group {
+    text-align: left;
+}
+
+.login-container .form-group label i {
+    margin-right: 8px;
+    color: var(--color-secondary);
+}
+
+/* --- ESTILO PARA CAJAS DE TEXTO Y SELECCIÓN --- */
+
+/* Contenedor del grupo para dar espacio */
+.form-group {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estilo de la etiqueta (Label) */
+.form-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-primary); /* Verde oscuro */
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+/* La caja de texto per se */
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 1rem;
+    border: 2px solid #e0e6e0; /* Gris con un toque verdoso */
+    border-radius: 8px;
+    background-color: #fafdfa;
+    color: var(--color-text);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-sizing: border-box; /* Evita que el padding ensanche el input */
+}
+
+/* EFECTO AL HACER CLIC (FOCUS) */
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--color-secondary); /* Verde follaje */
+    background-color: var(--color-white);
+    box-shadow: 0 0 0 4px rgba(106, 168, 79, 0.15); /* Resplandor suave verde */
+    transform: translateY(-1px); /* Pequeño levante visual */
+}
+
+/* Estilo para el Placeholder (el texto de fondo) */
+.form-group input::placeholder {
+    color: #a0aaa0;
+    font-size: 0.9rem;
+}
+
+/* Estado de Error (para validaciones) */
+.form-group input.is-invalid {
+    border-color: var(--color-error);
+    background-color: #fff8f8;
+}
+
+.form-group input.is-invalid:focus {
+    box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
+}
+
+/* PALETA DE COLORES AGUACATE HASS */
+:root {
+    --color-primary: #1a3a28;    /* Verde Aguacate Muy Oscuro (Sidebar) */
+    --color-secondary: #2e7d32;  /* Verde Hoja (Hover/Botones) */
+    --color-accent: #78a309;     /* Verde Lima (Detalles) */
+    --color-background: #f4f7f4; /* Fondo Grisáceo Verdoso */
+    --color-text: #333333;
+    --color-white: #ffffff;
+    --color-shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo del Sidebar */
+.sidebar {
+    background-color: var(--color-primary) !important;
+    min-height: 100vh;
+    box-shadow: 2px 0 10px var(--color-shadow);
+}
+
+.user-info-box {
+    background-color: #122b1d;
+    color: white;
+}
+
+.nav-link {
+    color: #d1e7dd !important;
+    transition: all 0.3s;
+    border-radius: 8px !important;
+    margin-bottom: 5px;
+}
+
+.nav-link:hover, .nav-link.active {
+    background-color: var(--color-secondary) !important;
+    color: white !important;
+}
+
+.menu-divider {
+    color: #5c8d70;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* --- ESTILO PARA CAJAS DE TEXTO (Inputs) --- */
+input[type="text"], input[type="password"], input[type="number"], input[type="date"], select, textarea {
+    width: 100%;
+    padding: 10px 15px;
+    border: 2px solid #e0e6e0;
+    border-radius: 8px;
+    background-color: #fafdfa;
+    transition: all 0.3s;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.1);
+}
+
+/* --- ESTILO PARA TABLAS --- */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.data-table thead {
+    background-color: var(--color-secondary);
+    color: white;
+}
+
+.data-table th, .data-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f1f8f1;
+}
+
+/* --- ESTILOS DEL DASHBOARD --- */
+
+.welcome-hero {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(26, 58, 40, 0.2);
+}
+
+.welcome-text h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: white;
+}
+
+.text-accent { color: var(--color-accent); }
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+}
+
+.dash-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.dash-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 20px var(--color-shadow);
+    border-color: var(--color-secondary);
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    width: 70px;
+    height: 70px;
+    line-height: 70px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+}
+
+/* Colores de iconos con transparencia */
+.color-1 { background: rgba(120, 163, 9, 0.1); color: var(--color-accent); }
+.color-2 { background: rgba(46, 125, 50, 0.1); color: var(--color-secondary); }
+.color-3 { background: rgba(26, 58, 40, 0.1); color: var(--color-primary); }
+
+.dash-card h3 {
+    color: var(--color-primary);
+    margin-bottom: 15px;
+}
+
+.dash-card p {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+}
+
+.card-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.dash-card.highlight {
+    background-color: #f9fff9;
+    border: 2px dashed var(--color-accent);
+}
+/* --- ESTILOS PARA BADGES DE RESULTADOS --- */
+.badge {
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 20px; /* Estilo píldora más moderno */
+    text-transform: uppercase;
+    color: white;
+    min-width: 80px;
+    text-align: center;
+}
+
+/* Niveles de Suficiencia */
+.bg-bajo { background-color: var(--color-error); }     /* Rojo */
+.bg-normal { background-color: var(--color-success); } /* Verde */
+.bg-alto { background-color: #f39c12; }                /* Naranja/Amarillo */
+
+/* Necesidad de Aplicación */
+.bg-aplicar {
+    background-color: var(--color-primary);
+    border: 1px solid var(--color-accent);
+}
+.bg-no-aplicar {
+    background-color: #95a5a6;
+}
+
+/* Estado Vacío */
 .empty-state {
     text-align: center;
-    padding: 40px;
-    border: 2px dashed #ccc;
-    border-radius: 8px;
-    color: #666;
-    margin-top: 20px;
+    padding: 50px;
+    background: #fdfdfd;
+    border: 2px dashed #ddd;
+    border-radius: 12px;
+    color: #888;
+}
+.empty-state i {
+    font-size: 3rem;
+    color: var(--color-secondary);
+    margin-bottom: 15px;
+    display: block;
 }
