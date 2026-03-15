@@ -4,56 +4,89 @@
 
 @section('content')
 
+    <div class="action-bar d-flex justify-content-between align-items-center mb-4">
+        <p class="text-muted m-0">Consulta del diagnóstico mineral basado en valores de laboratorio.</p>
+        <div class="d-flex gap-2">
+            <a href="{{ route('muestreos.index') }}" class="btn btn-secondary">
+                <i class="fas fa-flask"></i> Ver Muestras
+            </a>
+        </div>
+    </div>
+
     @if ($analisis->isEmpty())
-        <div class="empty-state">
-            <i class="fas fa-microscope"></i>
-            <h3>No hay análisis generados</h3>
-            <p>Calcula los índices ingresando primero los valores en "Ingreso de Muestras".</p>
-            <a href="{{ route('muestreos.index') }}" class="btn btn-primary mt-3">Ir a Muestreos</a>
+        <div class="empty-state text-center">
+            <i class="fas fa-microscope fa-3x mb-3 text-muted"></i>
+            <h3>No hay análisis registrados</h3>
+            <p>Los resultados aparecerán aquí una vez que se procesen los datos de laboratorio.</p>
         </div>
     @else
         <div class="table-responsive">
-            <table class="data-table">
+            <table class="data-table table table-hover">
                 <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Muestra / Elemento</th>
-                    <th>Índice Kenworthy</th>
-                    <th>Estado Nutricional</th>
-                    <th>Recomendación</th>
+                    <th style="width: 80px;">ID</th>
+                    <th><i class="fas fa-leaf text-success"></i> Muestra / Elemento</th>
+                    <th class="text-center">Índice Kenworthy</th>
+                    <th class="text-center">Estado Nutricional</th>
+                    <th class="text-center">Recomendación</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach ($analisis as $item)
                     <tr>
-                        <td><strong>#{{ $item->id }}</strong></td>
+                        {{-- 1. ID --}}
+                        <td><span class="badge bg-light text-dark border">#{{ $item->Id }}</span></td>
+
+                        {{-- 2. Elemento --}}
                         <td>
-                            <i class="fas fa-leaf text-success"></i>
-                            {{ $item->parcela_elemento_id }} </td>
-                        <td class="fw-bold text-center">
+                            @if($item->plotElement && $item->plotElement->element)
+                                <strong>{{ $item->plotElement->element->Name }}</strong><br>
+                                <small class="text-muted">ID Muestra: {{ $item->Plot_element_id }}</small>
+                            @else
+                                <span class="text-muted">N/A</span>
+                            @endif
+                        </td>
+
+                        {{-- 3. Valor del Índice --}}
+                        <td class="fw-bold text-center" style="font-size: 1.1em;">
                             {{ number_format($item->ind_kenworthy, 2) }}
                         </td>
-                        <td>
+
+                        {{-- 4. Nivel de Suficiencia --}}
+                        <td class="text-center">
                             @php
-                                // Lógica de colores basada en el índice
-                                $nivel = strtolower($item->nivel_suficiencia);
-                                $bgNivel = 'bg-normal';
-                                if($nivel == 'bajo' || $nivel == 'deficiente') $bgNivel = 'bg-bajo';
-                                if($nivel == 'alto' || $nivel == 'exceso') $bgNivel = 'bg-alto';
+                                // 1. Obtenemos el valor de la base de datos (asegúrate que la columna es nivel_suficiencia)
+                                $valorSuficiencia = $item->nivel_suficiencia ?? 'SIN DATO';
+                                $nivel = strtolower($valorSuficiencia);
+
+                                $badgeClass = 'bg-secondary'; // Color gris por defecto si no coincide nada
+
+                                // 2. Lógica de colores basada en las palabras clave de tu SQL
+                                if (str_contains($nivel, 'bajo') || str_contains($nivel, 'deficiente')) {
+                                    $badgeClass = 'bg-danger'; // Rojo
+                                } elseif (str_contains($nivel, 'normal') || str_contains($nivel, 'suficiente') || str_contains($nivel, 'optimo')) {
+                                    $badgeClass = 'bg-success'; // Verde
+                                } elseif (str_contains($nivel, 'alto') || str_contains($nivel, 'exceso')) {
+                                    $badgeClass = 'bg-warning text-dark'; // Amarillo/Naranja
+                                }
                             @endphp
-                            <span class="badge {{ $bgNivel }}">
-                                    {{ $item->nivel_suficiencia }}
-                                </span>
+
+                            {{-- 3. Imprimimos el badge con el texto en mayúsculas --}}
+                            <span class="badge {{ $badgeClass }}" style="padding: 8px 12px; min-width: 110px; display: inline-block;">
+        {{ strtoupper($valorSuficiencia) }}
+    </span>
                         </td>
-                        <td>
-                            @if(strtolower($item->necesidad_aplicacion) == 'aplicar')
-                                <span class="badge bg-aplicar">
-                                        <i class="fas fa-hand-holding-droplet"></i> APLICAR
-                                    </span>
+
+                        {{-- 5. Recomendación --}}
+                        <td class="text-center">
+                            @if(str_contains(strtolower($item->necesidad_aplicacion), 'aplicar'))
+                                <span class="text-danger fw-bold">
+                                    <i class="fas fa-exclamation-triangle"></i> REQUIERE APLICACIÓN
+                                </span>
                             @else
-                                <span class="badge bg-no-aplicar">
-                                        SIN ACCIÓN
-                                    </span>
+                                <span class="text-success">
+                                    <i class="fas fa-check-circle"></i> SIN ACCIÓN
+                                </span>
                             @endif
                         </td>
                     </tr>

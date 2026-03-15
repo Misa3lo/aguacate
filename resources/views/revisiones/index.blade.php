@@ -12,16 +12,15 @@
     </div>
 
     @if ($revisiones->isEmpty())
-        <div class="empty-state">
-            <i class="fas fa-calendar-alt"></i>
+        <div class="empty-state text-center p-5">
+            <i class="fas fa-calendar-alt fa-3x text-muted mb-3"></i>
             <h3>Sin visitas programadas</h3>
             <p>No se han registrado revisiones de parcelas aún.</p>
-            <p>Comienza registrando la fecha de una nueva visita de campo para poder capturar muestras.</p>
             <a href="{{ route('revisiones.create') }}" class="btn btn-secondary mt-2">Crear primera revisión</a>
         </div>
     @else
         <div class="table-responsive">
-            <table class="data-table">
+            <table class="data-table table table-hover">
                 <thead>
                 <tr>
                     <th style="width: 80px;">ID</th>
@@ -34,39 +33,19 @@
                 <tbody>
                 @foreach ($revisiones as $revision)
                     <tr>
-                        <td><span class="text-muted">#{{ $revision->id }}</span></td>
-                        <td>
-                                <span class="fw-bold text-dark" style="font-size: 1rem;">
-                                    {{ \Carbon\Carbon::parse($revision->fecha_revision)->format('d/m/Y') }}
-                                </span>
-                        </td>
-                        <td>
-                                <span class="badge bg-no-aplicar">
-                                    ID: {{ $revision->parcela_id }}
-                                </span>
-                        </td>
-                        <td>
-                            <small class="text-muted">
-                                {{ $revision->parcela->direccion ?? 'Parcela no encontrada' }}
-                            </small>
-                        </td>
+                        <td><strong>#{{ $revision->Id }}</strong></td>
+                        <td>{{ \Carbon\Carbon::parse($revision->Review_date)->format('d/m/Y') }}</td>
+                        <td><span class="badge bg-light text-dark">ID: {{ $revision->Plot_id }}</span></td>
+                        <td>{{ $revision->plot->Address ?? 'Dirección no registrada' }}</td>
                         <td>
                             <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('revisiones.edit', $revision->id) }}"
-                                   class="btn btn-secondary btn-sm"
-                                   title="Editar fecha o parcela">
+                                <a href="{{ route('revisiones.edit', $revision->Id) }}" class="btn btn-secondary btn-sm">
                                     <i class="fas fa-edit"></i>
                                 </a>
-
-                                <form action="{{ route('revisiones.destroy', $revision->id) }}"
-                                      method="POST"
-                                      class="d-inline-block">
+                                <form action="{{ route('revisiones.destroy', $revision->Id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit"
-                                            class="btn btn-danger btn-sm"
-                                            title="Eliminar revisión"
-                                            onclick="return confirm('¿Está seguro de que desea eliminar esta revisión? Se borrarán todos los datos de laboratorio asociados a esta visita.')">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar esta revisión?')">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </form>

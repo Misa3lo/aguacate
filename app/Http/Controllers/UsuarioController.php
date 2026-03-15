@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Usuario;
-use Illuminate\Support\Facades\Hash; // Importante para encriptar la contraseña
+use App\Models\UserPlot; // Cambiado de Usuario a UserPlot
+use Illuminate\Support\Facades\Hash;
 
 class UsuarioController extends Controller
 {
     public function index()
     {
-        $usuarios = Usuario::all();
+        // Usa el modelo correcto y la tabla users_plot
+        $usuarios = UserPlot::all();
         return view('usuarios.index', compact('usuarios'));
     }
 
@@ -22,47 +23,50 @@ class UsuarioController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nombre' => 'required|string|max:255',
-            'telefono' => 'required|string|max:15|unique:usuario,telefono',
-            'password' => 'required|string|min:6|confirmed', // 'confirmed' busca un campo 'password_confirmation'
+            'Name' => 'required|string|max:255',
+            'Phone' => 'required|string|max:15|unique:users_plot,Phone', // Referencia a tabla correcta
+            'Password' => 'required|min:4'
         ]);
 
-        Usuario::create([
-            'nombre' => $request->nombre,
-            'telefono' => $request->telefono,
-            'password' => Hash::make($request->password), // ¡Siempre encriptar!
+        UserPlot::create([
+            'Name' => $request->Name,
+            'Phone' => $request->Phone,
+            'Password' => Hash::make($request->Password), // Uso de Hash estándar
         ]);
 
-        return redirect()->route('usuarios.index')->with('success', 'Usuario creado exitosamente.');
+        return redirect()->route('usuarios.index')->with('success', 'Dueño registrado correctamente.');
     }
 
-    public function edit(Usuario $usuario)
+    public function edit($id)
     {
+        $usuario = UserPlot::findOrFail($id);
         return view('usuarios.edit', compact('usuario'));
     }
 
-    public function update(Request $request, Usuario $usuario)
+    public function update(Request $request, $id)
     {
+        $usuario = UserPlot::findOrFail($id);
+
         $request->validate([
-            'nombre' => 'required|string|max:255',
-            // Único, ignorando el ID actual
-            'telefono' => 'required|string|max:15|unique:usuario,telefono,' . $usuario->id,
-            // El password es opcional al actualizar, pero si se envía, se valida
-            'password' => 'nullable|string|min:6|confirmed',
+            'Name' => 'required|string|max:255',
+            'Phone' => 'required|string|max:15|unique:users_plot,Phone,' . $id . ',Id', // Ignora el Id actual
+            'Password' => 'nullable|string|min:4',
         ]);
 
-        $data = $request->only('nombre', 'telefono');
+        $usuario->Name = $request->Name;
+        $usuario->Phone = $request->Phone;
 
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
+        if ($request->filled('Password')) {
+            $usuario->Password = Hash::make($request->Password);
         }
 
-        $usuario->update($data);
+        $usuario->save();
         return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado exitosamente.');
     }
 
-    public function destroy(Usuario $usuario)
+    public function destroy($id)
     {
+        $usuario = UserPlot::findOrFail($id);
         $usuario->delete();
         return redirect()->route('usuarios.index')->with('success', 'Usuario eliminado correctamente.');
     }

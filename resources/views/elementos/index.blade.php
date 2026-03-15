@@ -20,47 +20,44 @@
             <a href="{{ route('elementos.create') }}" class="btn btn-secondary mt-2">Crear primer nutriente</a>
         </div>
     @else
+        {{-- Dentro del @else de index.blade.php --}}
         <div class="table-responsive">
             <table class="data-table">
                 <thead>
                 <tr>
-                    <th style="width: 80px;">ID</th>
-                    <th><i class="fas fa-vial"></i> Nombre del Elemento</th>
-                    <th><i class="fas fa-weight-hanging"></i> Unidad de Medida</th>
-                    <th style="width: 150px;" class="text-center">Acciones</th>
+                    <th style="width: 70px;">ID</th>
+                    <th><i class="fas fa-vial"></i> Elemento</th>
+                    <th class="text-center">Unidad</th>
+                    <th class="text-center"><i class="fas fa-calendar-alt"></i> Registro</th>
+                    <th style="width: 120px;" class="text-center">Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach ($elementos as $elemento)
                     <tr>
-                        <td><span class="text-muted">#{{ $elemento->id }}</span></td>
-                        <td>
-                                <span class="fw-bold text-dark" style="font-size: 1.1rem;">
-                                    {{ $elemento->nombre }}
-                                </span>
+                        <td class="text-muted">#{{ $elemento->Id }}</td>
+                        <td><strong>{{ $elemento->Name }}</strong></td>
+                        <td class="text-center">
+                            <span class="badge bg-info text-dark">{{ $elemento->Unit }}</span>
                         </td>
-                        <td>
-                                <span class="badge bg-no-aplicar" style="font-size: 0.9rem;">
-                                    {{ $elemento->unidad }}
-                                </span>
+                        <td class="text-center" style="font-size: 0.9em;">
+                            {{-- Usando el nombre exacto de la columna: Created_at --}}
+                            @if($elemento->Created_at)
+                                <div>{{ $elemento->Created_at->format('d/m/Y') }}</div>
+                                <small class="text-muted">{{ $elemento->Created_at->format('H:i') }}</small>
+                            @else
+                                <span class="text-muted">---</span>
+                            @endif
                         </td>
                         <td>
                             <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('elementos.edit', $elemento->id) }}"
-                                   class="btn btn-secondary btn-sm"
-                                   title="Editar nombre o unidad">
+                                <a href="{{ route('elementos.edit', $elemento->Id) }}" class="btn btn-secondary btn-sm">
                                     <i class="fas fa-edit"></i>
                                 </a>
-
-                                <form action="{{ route('elementos.destroy', $elemento->id) }}"
-                                      method="POST"
-                                      class="d-inline-block">
+                                <form action="{{ route('elementos.destroy', $elemento->Id) }}" method="POST" class="d-inline-block">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit"
-                                            class="btn btn-danger btn-sm"
-                                            title="Eliminar Nutriente"
-                                            onclick="return confirm('¿Está seguro de que desea eliminar el elemento {{ $elemento->nombre }}? Esto podría afectar los análisis registrados.')">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar {{ $elemento->Name }}?')">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </form>

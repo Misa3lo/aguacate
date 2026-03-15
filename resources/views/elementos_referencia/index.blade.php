@@ -28,51 +28,44 @@
                     <th><i class="fas fa-flask"></i> Nutriente</th>
                     <th class="text-center"><i class="fas fa-bullseye"></i> Valor Ideal (Media)</th>
                     <th class="text-center"><i class="fas fa-percentage"></i> Coef. Variación</th>
-                    <th class="text-center">Unidad</th>
-                    <th style="width: 140px;" class="text-center">Acciones</th>
+                    <th class="text-center"><i class="fas fa-calendar-alt"></i> Registro</th>
+                    <th style="width: 120px;" class="text-center">Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach ($referencias as $referencia)
                     <tr>
-                        <td><span class="text-muted">#{{ $referencia->id }}</span></td>
+                        <td class="text-muted">#{{ $referencia->Id }}</td>
+                        {{-- Acceso al nombre del elemento mediante la relación --}}
                         <td>
-                                <span class="fw-bold text-dark" style="font-size: 1.1rem;">
-                                    {{ $referencia->elemento->nombre ?? 'N/A' }}
-                                </span>
+                            <strong>{{ $referencia->element->Name }}</strong>
+                            <small class="text-muted d-block">{{ $referencia->element->Unit }}</small>
                         </td>
                         <td class="text-center">
-                                <span class="badge bg-aplicar" style="font-size: 1rem; min-width: 90px;">
-                                    {{ number_format($referencia->valor_referencia, 4) }}
-                                </span>
+                        <span class="badge bg-light text-dark" style="font-size: 1.1em;">
+                            {{ number_format($referencia->Reference_value, 4) }}
+                        </span>
                         </td>
                         <td class="text-center">
-                                <span class="text-secondary fw-bold">
-                                    {{ number_format($referencia->coef_variacion, 4) }}
-                                </span>
+                            {{ number_format($referencia->Deviation_coefficient, 4) }}
                         </td>
-                        <td class="text-center">
-                                <span class="badge bg-no-aplicar">
-                                    {{ $referencia->elemento->unidad ?? 'N/A' }}
-                                </span>
+                        <td class="text-center" style="font-size: 0.85em;">
+                            @if($referencia->Created_at)
+                                <div>{{ $referencia->Created_at->format('d/m/Y') }}</div>
+                                <small class="text-muted">{{ $referencia->Created_at->format('H:i') }}</small>
+                            @else
+                                <span class="text-muted">---</span>
+                            @endif
                         </td>
                         <td>
                             <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('referencias.edit', $referencia->id) }}"
-                                   class="btn btn-secondary btn-sm"
-                                   title="Editar parámetros">
+                                <a href="{{ route('referencias.edit', $referencia->Id) }}" class="btn btn-secondary btn-sm">
                                     <i class="fas fa-edit"></i>
                                 </a>
-
-                                <form action="{{ route('referencias.destroy', $referencia->id) }}"
-                                      method="POST"
-                                      class="d-inline-block">
+                                <form action="{{ route('referencias.destroy', $referencia->Id) }}" method="POST" class="d-inline-block">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit"
-                                            class="btn btn-danger btn-sm"
-                                            title="Eliminar referencia"
-                                            onclick="return confirm('¡Atención! Eliminar esta referencia impedirá realizar diagnósticos para este nutriente. ¿Desea continuar?')">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar referencia?')">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </form>

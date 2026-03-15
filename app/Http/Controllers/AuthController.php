@@ -7,52 +7,41 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    /**
-     * Muestra el formulario de inicio de sesión.
-     */
     public function loginForm()
     {
         return view('auth.login');
     }
 
-    /**
-     * Procesa el intento de inicio de sesión.
-     */
     public function login(Request $request)
     {
-        // Validación de credenciales: usamos 'telefono' como nombre de usuario
+        // 1. Validación: Usamos 'Phone' y 'Password' como en el SQL
         $credentials = $request->validate([
-            'telefono' => ['required', 'string'],
-            'password' => ['required'],
+            'Phone' => ['required', 'string'],
+            'Password' => ['required'],
         ]);
 
-        // Intentar autenticar al usuario
-        // Laravel usa el campo 'telefono' en lugar de 'email' automáticamente
-        // si se pasa en el array de credenciales.
-        if (Auth::attempt($credentials)) {
+        // 2. Intento de autenticación
+        // Nota: Auth::attempt espera un array donde la clave de la contraseña sea 'password'
+        // internamente para compararla, pero gracias al método getAuthPassword() en el modelo,
+        // buscará en la columna correcta.
+        // Dentro de AuthController.php, en el método login:
+        if (Auth::attempt(['Phone' => $credentials['Phone'], 'password' => $credentials['Password']])) {
             $request->session()->regenerate();
-
-            // Redirigir al dashboard (ruta 'inicio')
             return redirect()->intended(route('inicio'));
         }
 
-        // Si falla, redirigir de vuelta con un error
+        // 3. Error si falla
         return back()->withErrors([
-            'telefono' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
-        ])->onlyInput('telefono');
+            'Phone' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
+        ])->onlyInput('Phone');
     }
 
-    /**
-     * Cierra la sesión del usuario.
-     */
     public function logout(Request $request)
     {
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        // Redirigir a la página de inicio de sesión
         return redirect('/login');
     }
 }

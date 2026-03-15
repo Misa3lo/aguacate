@@ -9,39 +9,37 @@
             @csrf
 
             <div class="form-group">
-                <label for="elemento_id"><i class="fas fa-flask"></i> Nutriente al que Aplica:</label>
-                <select id="elemento_id" name="elemento_id" required>
-                    <option value="">-- Seleccione un Nutriente --</option>
+                <label for="Element_id"><i class="fas fa-vial"></i> Seleccionar Nutriente:</label>
+                <select id="Element_id" name="Element_id" class="form-control" required>
+                    <option value="">-- Elija un elemento del catálogo --</option>
                     @foreach ($elementos as $elemento)
-                        <option value="{{ $elemento->id }}" {{ old('elemento_id') == $elemento->id ? 'selected' : '' }}>
-                            {{ $elemento->nombre }} (Unidad: {{ $elemento->unidad }})
+                        <option value="{{ $elemento->Id }}" {{ old('Element_id') == $elemento->Id ? 'selected' : '' }}>
+                            {{ $elemento->Name }} ({{ $elemento->Unit }})
                         </option>
                     @endforeach
                 </select>
-                @error('elemento_id')
-                <p class="error-message">{{ $message }}</p>
-                @enderror
+                @error('Element_id') <p class="error-message">{{ $message }}</p> @enderror
             </div>
 
-            <div class="form-group">
-                <label for="valor_referencia"><i class="fas fa-ruler-horizontal"></i> Valor de Referencia (Ideal):</label>
-                <input type="number" step="0.0001" id="valor_referencia" name="valor_referencia" value="{{ old('valor_referencia') }}" required>
-                @error('valor_referencia')
-                <p class="error-message">{{ $message }}</p>
-                @enderror
+            <div class="row mt-3">
+                <div class="col-md-6 form-group">
+                    <label for="Reference_value"><i class="fas fa-bullseye"></i> Valor de Referencia (Media):</label>
+                    <input type="number" step="0.0001" id="Reference_value" name="Reference_value"
+                           value="{{ old('Reference_value') }}" class="form-control" placeholder="0.0000" required>
+                    @error('Reference_value') <p class="error-message">{{ $message }}</p> @enderror
+                </div>
+
+                <div class="col-md-6 form-group">
+                    <label for="Deviation_coefficient"><i class="fas fa-percentage"></i> Coeficiente de Variación:</label>
+                    <input type="number" step="0.0001" id="Deviation_coefficient" name="Deviation_coefficient"
+                           value="{{ old('Deviation_coefficient') }}" class="form-control" placeholder="0.0000" required>
+                    @error('Deviation_coefficient') <p class="error-message">{{ $message }}</p> @enderror
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="coef_variacion"><i class="fas fa-percent"></i> Coeficiente de Variación:</label>
-                <input type="number" step="0.0001" id="coef_variacion" name="coef_variacion" value="{{ old('coef_variacion') }}" required>
-                @error('coef_variacion')
-                <p class="error-message">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="form-actions">
+            <div class="form-actions mt-4">
                 <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Guardar Referencia</button>
-                <a href="{{ route('referencias.index') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Cancelar</a>
+                <a href="{{ route('referencias.index') }}" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
     </div>

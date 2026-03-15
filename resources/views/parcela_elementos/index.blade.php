@@ -12,11 +12,10 @@
     </div>
 
     @if ($muestreos->isEmpty())
-        <div class="empty-state">
-            <i class="fas fa-vial"></i>
+        <div class="empty-state text-center">
+            <i class="fas fa-vial fa-3x mb-3 text-muted"></i>
             <h3>Sin mediciones capturadas</h3>
             <p>No se han registrado mediciones de muestras de nutrientes aún.</p>
-            <p>Comienza a ingresar los valores de laboratorio para generar los diagnósticos.</p>
             <a href="{{ route('muestreos.create') }}" class="btn btn-secondary mt-2">Registrar primera medición</a>
         </div>
     @else
@@ -25,58 +24,40 @@
                 <thead>
                 <tr>
                     <th style="width: 60px;">ID</th>
-                    <th><i class="fas fa-map-marker-alt"></i> Parcela / Ubicación</th>
+                    <th><i class="fas fa-map-marker-alt"></i> Parcela / Huerto</th>
                     <th><i class="fas fa-flask"></i> Elemento</th>
-                    <th class="text-center"><i class="fas fa-calendar-day"></i> Fecha Revisión</th>
                     <th class="text-center"><i class="fas fa-microscope"></i> Valor Observado</th>
-                    <th style="width: 140px;" class="text-center">Acciones</th>
+                    <th class="text-center"><i class="fas fa-calendar-day"></i> Fecha Revisión</th>
+                    <th class="text-center">Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach ($muestreos as $muestreo)
+                @foreach ($muestreos as $m)
                     <tr>
-                        <td><span class="text-muted">#{{ $muestreo->id }}</span></td>
+                        <td>{{ $m->Id }}</td>
                         <td>
-                            <div class="fw-bold text-dark">ID: {{ $muestreo->parcela_id }}</div>
-                            <small class="text-muted">{{ Str::limit($muestreo->parcela->direccion ?? 'N/A', 30) }}</small>
+                            <strong>Huerto ID: {{ $m->Plot_id }}</strong><br>
+                            <small class="text-muted">Árboles: {{ $m->plot->Tree_count ?? 'N/A' }}</small>
                         </td>
                         <td>
-                                <span class="fw-bold" style="color: var(--color-primary);">
-                                    {{ $muestreo->elemento->nombre ?? 'N/A' }}
-                                </span>
-                            <small class="badge bg-no-aplicar p-1" style="font-size: 0.7rem;">
-                                {{ $muestreo->elemento->unit ?? ($muestreo->elemento->unidad ?? '') }}
-                            </small>
+                            <span class="badge bg-info text-dark">{{ $m->element->Name ?? 'N/A' }}</span>
                         </td>
                         <td class="text-center">
-                                <span class="text-secondary">
-                                    {{ \Carbon\Carbon::parse($muestreo->revision->fecha_revision)->format('d/m/Y') }}
-                                </span>
-                            <br>
-                            <small class="text-muted" style="font-size: 0.7rem;">Rev #{{ $muestreo->revision_id }}</small>
+                            <span class="fw-bold text-primary">{{ $m->Observed_value }}</span>
+                            <small>{{ $m->element->Unit ?? '' }}</small>
                         </td>
                         <td class="text-center">
-                                <span class="badge bg-aplicar" style="font-size: 1rem; min-width: 100px;">
-                                    {{ number_format($muestreo->valor_observado, 4) }}
-                                </span>
+                            {{ $m->review->Review_date ?? 'Sin fecha' }}
                         </td>
                         <td>
                             <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('muestreos.edit', $muestreo->id) }}"
-                                   class="btn btn-secondary btn-sm"
-                                   title="Editar medición">
+                                <a href="{{ route('muestreos.edit', $m->Id) }}" class="btn btn-secondary btn-sm" title="Editar">
                                     <i class="fas fa-edit"></i>
                                 </a>
-
-                                <form action="{{ route('muestreos.destroy', $muestreo->id) }}"
-                                      method="POST"
-                                      class="d-inline-block">
+                                <form action="{{ route('muestreos.destroy', $m->Id) }}" method="POST" class="d-inline-block">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit"
-                                            class="btn btn-danger btn-sm"
-                                            title="Eliminar muestra"
-                                            onclick="return confirm('¿Está seguro de que desea eliminar esta medición? Se perderá el dato para el cálculo de análisis.')">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar esta medición?')">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </form>

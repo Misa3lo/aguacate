@@ -1,46 +1,53 @@
 @extends('layouts.app')
 
-@section('title', 'Editar Valor de Referencia ID: ' . $elementoReferencia->id)
+@section('title', 'Editar Valor de Referencia ID: ' . $referencia->Id)
 
 @section('content')
 
     <div class="card-form">
-        <form action="{{ route('referencias.update', $elementoReferencia->id) }}" method="POST">
+        {{-- Usamos $referencia->Id --}}
+        <form action="{{ route('referencias.update', $referencia->Id) }}" method="POST">
             @csrf
             @method('PUT')
 
             <div class="form-group">
-                <label for="elemento_id"><i class="fas fa-flask"></i> Nutriente al que Aplica:</label>
-                <select id="elemento_id" name="elemento_id" required>
+                <label for="Element_id"><i class="fas fa-flask"></i> Nutriente al que Aplica:</label>
+                <select id="Element_id" name="Element_id" required>
                     <option value="">-- Seleccione un Nutriente --</option>
                     @foreach ($elementos as $elemento)
-                        <option value="{{ $elemento->id }}"
-                            {{ old('elemento_id', $elementoReferencia->elemento_id) == $elemento->id ? 'selected' : '' }}>
-                            {{ $elemento->nombre }} (Unidad: {{ $elemento->unidad }})
+                        <option value="{{ $elemento->Id }}"
+                            {{ old('Element_id', $referencia->Element_id) == $elemento->Id ? 'selected' : '' }}>
+                            {{ $elemento->Name }} (Unidad: {{ $elemento->Unit }})
                         </option>
                     @endforeach
                 </select>
-                @error('elemento_id')
+                @error('Element_id')
                 <p class="error-message">{{ $message }}</p>
                 @enderror
             </div>
 
             <div class="form-group">
-                <label for="valor_referencia"><i class="fas fa-ruler-horizontal"></i> Valor de Referencia (Ideal):</label>
-                <input type="number" step="0.0001" id="valor_referencia" name="valor_referencia"
-                       value="{{ old('valor_referencia', $elementoReferencia->valor_referencia) }}" required>
-                @error('valor_referencia')
+                <label for="Reference_value"><i class="fas fa-ruler-horizontal"></i> Valor de Referencia (Ideal):</label>
+                <input type="number" step="0.0001" id="Reference_value" name="Reference_value"
+                       value="{{ old('Reference_value', $referencia->Reference_value) }}" required>
+                @error('Reference_value')
                 <p class="error-message">{{ $message }}</p>
                 @enderror
             </div>
 
             <div class="form-group">
-                <label for="coef_variacion"><i class="fas fa-percent"></i> Coeficiente de Variación:</label>
-                <input type="number" step="0.0001" id="coef_variacion" name="coef_variacion"
-                       value="{{ old('coef_variacion', $elementoReferencia->coef_variacion) }}" required>
-                @error('coef_variacion')
+                <label for="Deviation_coefficient"><i class="fas fa-percent"></i> Coeficiente de Variación:</label>
+                <input type="number" step="0.0001" id="Deviation_coefficient" name="Deviation_coefficient"
+                       value="{{ old('Deviation_coefficient', $referencia->Deviation_coefficient) }}" required>
+                @error('Deviation_coefficient')
                 <p class="error-message">{{ $message }}</p>
                 @enderror
+            </div>
+
+            {{-- Información de auditoría para mantener la disposición visual --}}
+            <div class="alert alert-light mt-3" style="border: 1px dashed #ccc; font-size: 0.85em;">
+                <i class="fas fa-info-circle"></i> Registrado originalmente:
+                <strong>{{ $referencia->Created_at ? $referencia->Created_at->format('d/m/Y H:i') : 'N/A' }}</strong>
             </div>
 
             <div class="form-actions">

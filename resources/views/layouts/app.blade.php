@@ -18,9 +18,10 @@
             <div class="user-info-box p-4 d-flex justify-content-between align-items-center">
                 <div class="text-truncate">
                     <i class="fas fa-user-circle fa-2x align-middle me-2"></i>
-                    <span class="fw-bold">{{ Auth::user()->nombre ?? 'Invitado' }}</span>
+                    {{-- Cambiado a Name para coincidir con la tabla users_plot --}}
+                    <span class="fw-bold text-white">{{ Auth::user()->Name ?? 'Invitado' }}</span>
                 </div>
-                <form action="{{ route('logout') ?? '#' }}" method="POST" class="m-0">
+                <form action="{{ route('logout') }}" method="POST" class="m-0">
                     @csrf
                     <button type="submit" class="btn btn-sm btn-outline-danger border-0 p-1 rounded-circle" title="Cerrar Sesión">
                         <i class="fas fa-power-off fa-lg text-white"></i>
@@ -30,23 +31,31 @@
 
             <ul class="nav nav-pills flex-column mb-auto p-3">
                 <li class="nav-item">
-                    <a href="{{ route('inicio') ?? '#' }}" class="nav-link {{ request()->routeIs('inicio') ? 'active' : '' }}">
+                    <a href="{{ route('inicio') }}" class="nav-link {{ request()->routeIs('inicio') ? 'active' : '' }}">
                         <i class="fas fa-home me-2"></i> Inicio
                     </a>
                 </li>
 
                 <li class="menu-divider mt-4 mb-2">Datos Base</li>
-                <li><a href="{{ route('usuarios.index') ?? '#' }}" class="nav-link"><i class="fas fa-users me-2"></i> Dueños</a></li>
-                <li><a href="{{ route('elementos.index') ?? '#' }}" class="nav-link"><i class="fas fa-flask me-2"></i> Nutrientes</a></li>
-                <li><a href="{{ route('referencias.index') ?? '#' }}" class="nav-link"><i class="fas fa-balance-scale me-2"></i> Referencias KBI</a></li>
+                <li><a href="{{ route('usuarios.index') }}" class="nav-link {{ request()->is('usuarios*') ? 'active' : '' }}"><i class="fas fa-users me-2"></i> Dueños</a></li>
+                <li><a href="{{ route('elementos.index') }}" class="nav-link {{ request()->is('elementos*') ? 'active' : '' }}"><i class="fas fa-flask me-2"></i> Nutrientes</a></li>
+                <li><a href="{{ route('referencias.index') }}" class="nav-link {{ request()->is('referencias*') ? 'active' : '' }}"><i class="fas fa-balance-scale me-2"></i> Referencias KBI</a></li>
 
                 <li class="menu-divider mt-4 mb-2">Operación</li>
-                <li><a href="{{ route('parcelas.index') ?? '#' }}" class="nav-link"><i class="fas fa-map-marked-alt me-2"></i> Huertos</a></li>
-                <li><a href="{{ route('muestreos.index') ?? '#' }}" class="nav-link"><i class="fas fa-vial me-2"></i> Ingreso Muestras</a></li>
+                <li><a href="{{ route('parcelas.index') }}" class="nav-link {{ request()->is('parcelas*') ? 'active' : '' }}"><i class="fas fa-map-marked-alt me-2"></i> Huertos</a></li>
+
+                {{-- NUEVO: Link a Revisiones --}}
+                <li>
+                    <a href="{{ route('revisiones.index') }}" class="nav-link {{ request()->is('revisiones*') ? 'active' : '' }}">
+                        <i class="fas fa-calendar-check me-2"></i> Revisiones de Campo
+                    </a>
+                </li>
+
+                <li><a href="{{ route('muestreos.index') }}" class="nav-link {{ request()->is('muestreos*') ? 'active' : '' }}"><i class="fas fa-vial me-2"></i> Ingreso Muestras</a></li>
 
                 <li class="menu-divider mt-4 mb-2">Resultados</li>
-                <li><a href="{{ route('analisis.index') ?? '#' }}" class="nav-link"><i class="fas fa-chart-line me-2"></i> Análisis Kenworthy</a></li>
-                <li><a href="{{ route('recomendaciones.index') ?? '#' }}" class="nav-link"><i class="fas fa-lightbulb me-2"></i> Recomendaciones</a></li>
+                <li><a href="{{ route('analisis.index') }}" class="nav-link {{ request()->is('analisis*') ? 'active' : '' }}"><i class="fas fa-chart-line me-2"></i> Análisis Kenworthy</a></li>
+                <li><a href="{{ route('recomendaciones.index') }}" class="nav-link {{ request()->is('recomendaciones*') ? 'active' : '' }}"><i class="fas fa-lightbulb me-2"></i> Recomendaciones</a></li>
             </ul>
         </nav>
 
@@ -62,7 +71,7 @@
                 </div>
             @endif
 
-            <div class="bg-white p-4 rounded shadow-sm">
+            <div class="bg-white p-4 rounded shadow-sm content-area">
                 @yield('content')
             </div>
         </main>
@@ -71,6 +80,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{{-- Importante: @stack('scripts') permite que la gráfica del inicio funcione --}}
 @yield('scripts')
+@stack('scripts')
 </body>
 </html>

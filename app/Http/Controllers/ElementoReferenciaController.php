@@ -3,57 +3,79 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\ElementoReferencia;
-use App\Models\Elemento; // Necesario para obtener el catálogo de elementos
+use App\Models\ElementReference; // Actualizado
+use App\Models\Element; // Actualizado
 
 class ElementoReferenciaController extends Controller
 {
     public function index()
     {
-        // Cargamos la relación con Elemento para mostrar el nombre del nutriente
-        $referencias = ElementoReferencia::with('elemento')->get();
+        // Cargamos la relación 'element' (en inglés)
+        $referencias = ElementReference::with('element')->get();
         return view('elementos_referencia.index', compact('referencias'));
     }
 
     public function create()
     {
-        $elementos = Elemento::all(); // Lista de elementos para el select
+        $elementos = Element::all();
         return view('elementos_referencia.create', compact('elementos'));
     }
 
     public function store(Request $request)
     {
+        // 1. Validar usando los nombres con Mayúscula inicial
         $request->validate([
-            'elemento_id' => 'required|exists:elemento,id|unique:elemento_referencia,elemento_id', // Solo una referencia por elemento
-            'valor_referencia' => 'required|numeric|min:0',
-            'coef_variacion' => 'required|numeric|min:0',
+            'Element_id' => 'required|exists:elements,Id',
+            'Reference_value' => 'required|numeric',
+            'Deviation_coefficient' => 'required|numeric',
         ]);
 
-        ElementoReferencia::create($request->all());
-        return redirect()->route('referencias.index')->with('success', 'Referencia creada exitosamente.');
+        // 2. Crear el registro
+        // Al usar $request->all(), Laravel buscará las llaves 'Element_id', etc.
+        // que coinciden con nuestro array $fillable del modelo.
+        ElementReference::create($request->all());
+
+        return redirect()->route('referencias.index')
+            ->with('success', 'Referencia guardada correctamente.');
     }
 
-    public function edit(ElementoReferencia $elementoReferencia) // Usamos el nombre del modelo
+    public function edit(ElementReference $elementoReferencia)
     {
-        $elementos = Elemento::all();
-        return view('elementos_referencia.edit', compact('elementoReferencia', 'elementos'));
+        // Cargamos todos los elementos para el select
+        $elementos = Element::all();
+
+        // Pasamos la variable a la vista.
+        // OJO: Si la vista usa $referencia, debemos enviarla así:
+        return view('elementos_referencia.edit', [
+            'referencia' => $elementoReferencia,
+            'elementos' => $elementos
+        ]);
     }
 
-    public function update(Request $request, ElementoReferencia $elementoReferencia)
+    public function update(Request $request, ElementReference $elementoReferencia)
     {
+        // 1. Validar usando los nombres exactos de la BD
         $request->validate([
-            // unique, ignorando el ID actual
-            'elemento_id' => 'required|exists:elemento,id|unique:elemento_referencia,elemento_id,' . $elementoReferencia->id,
-            'valor_referencia' => 'required|numeric|min:0',
-            'coef_variacion' => 'required|numeric|min:0',
+            'Element_id' => 'required|exists:elements,Id',
+            'Reference_value' => 'required|numeric',
+            'Deviation_coefficient' => 'required|numeric',
         ]);
 
-        $elementoReferencia->update($request->all());
-        return redirect()->route('referencias.index')->with('success', 'Referencia actualizada exitosamente.');
+        // 2. Actualizar el modelo
+        // Usamos $elementoReferencia (que es el nombre que Laravel asignó en la ruta)
+        $elementoReferencia->update([
+            'Element_id' => $request->Element_id,
+            'Reference_value' => $request->Reference_value,
+            'Deviation_coefficient' => $request->Deviation_coefficient,
+        ]);
+
+        return redirect()->route('referencias.index')
+            ->with('success', 'Referencia actualizada correctamente.');
     }
 
-    public function destroy(ElementoReferencia $elementoReferencia)
+    public function destroy($id)
     {
+        $elementoReferencia = ElementReference::findOrFail($id);
         $elementoReferencia->delete();
         return redirect()->route('referencias.index')->with('success', 'Referencia eliminada correctamente.');
     }

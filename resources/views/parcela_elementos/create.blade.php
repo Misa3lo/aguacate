@@ -1,71 +1,60 @@
 @extends('layouts.app')
 
-@section('title', 'Ingresar Nueva Muestra de Nutriente')
-
 @section('content')
-
     <div class="card-form">
         <form action="{{ route('muestreos.store') }}" method="POST">
             @csrf
 
             <div class="form-group">
-                <label for="parcela_id"><i class="fas fa-map-marked-alt"></i> Parcela:</label>
-                <select id="parcela_id" name="parcela_id" required>
-                    <option value="">-- Seleccione una Parcela --</option>
-                    @foreach ($parcelas as $parcela)
-                        <option value="{{ $parcela->id }}" {{ old('parcela_id') == $parcela->id ? 'selected' : '' }}>
-                            ID: {{ $parcela->id }} - {{ $parcela->direccion }}
-                        </option>
+                <label>Parcela (Huerto):</label>
+                <select name="Plot_id" required>
+                    @foreach($parcelas as $p)
+                        <option value="{{ $p->Id }}">ID: {{ $p->Id }} - Árboles: {{ $p->Tree_count }}</option>
                     @endforeach
                 </select>
-                @error('parcela_id')
-                <p class="error-message">{{ $message }}</p>
-                @enderror
             </div>
 
             <div class="form-group">
-                <label for="elemento_id"><i class="fas fa-flask"></i> Nutriente (Elemento):</label>
-                <select id="elemento_id" name="elemento_id" required>
-                    <option value="">-- Seleccione un Nutriente --</option>
-                    @foreach ($elementos as $elemento)
-                        <option value="{{ $elemento->id }}" {{ old('elemento_id') == $elemento->id ? 'selected' : '' }}>
-                            {{ $elemento->nombre }} ({{ $elemento->unidad }})
-                        </option>
+                <label>Nutriente:</label>
+                <select name="Element_id" required>
+                    @foreach($elementos as $e)
+                        <option value="{{ $e->Id }}">{{ $e->Name }} ({{ $e->Unit }})</option>
                     @endforeach
                 </select>
-                @error('elemento_id')
-                <p class="error-message">{{ $message }}</p>
-                @enderror
             </div>
 
             <div class="form-group">
-                <label for="revision_id"><i class="fas fa-calendar-check"></i> Revisión (Fecha de toma de muestra):</label>
-                <select id="revision_id" name="revision_id" required>
-                    <option value="">-- Seleccione la Revisión --</option>
-                    @foreach ($revisiones as $revision)
-                        <option value="{{ $revision->id }}" {{ old('revision_id') == $revision->id ? 'selected' : '' }}>
-                            ID: {{ $revision->id }} - {{ \Carbon\Carbon::parse($revision->fecha_revision)->format('d/m/Y') }} (Parcela ID: {{ $revision->parcela_id }})
-                        </option>
-                    @endforeach
-                </select>
-                @error('revision_id')
-                <p class="error-message">{{ $message }}</p>
-                @enderror
+                <label for="Review_id"><i class="fas fa-calendar-check"></i> Revisión Asociada:</label>
+
+                @if($revisiones->isEmpty())
+                    <div class="alert-info-mini" style="background: rgba(255,193,7,0.1); border: 1px dashed #ffc107; padding: 10px; border-radius: 8px;">
+                        <p style="color: #856404; font-size: 0.9em; margin: 0;">
+                            <i class="fas fa-exclamation-triangle"></i> No hay revisiones registradas para este huerto.
+                            <a href="{{ route('revisiones.create') }}" style="font-weight: bold; text-decoration: underline;">Crear una revisión ahora</a>
+                        </p>
+                    </div>
+                    {{-- Input oculto para evitar errores de envío si es necesario, o simplemente deshabilitar el botón --}}
+                @else
+                    <select id="Review_id" name="Review_id" required>
+                        <option value="">-- Seleccione la Fecha de Revisión --</option>
+                        @foreach ($revisiones as $r)
+                            <option value="{{ $r->Id }}" {{ old('Review_id') == $r->Id ? 'selected' : '' }}>
+                                Revisión #{{ $r->Id }} - {{ $r->Review_date }} (Huerto: {{ $r->Plot_id }})
+                            </option>
+                        @endforeach
+                    </select>
+                @endif
             </div>
 
             <div class="form-group">
-                <label for="valor_observado"><i class="fas fa-chart-bar"></i> Valor Observado (Medición real):</label>
-                <input type="number" step="0.0001" id="valor_observado" name="valor_observado" value="{{ old('valor_observado') }}" required>
-                @error('valor_observado')
-                <p class="error-message">{{ $message }}</p>
-                @enderror
+                <label>Valor Observado (Laboratorio):</label>
+                <input type="number" step="0.0001" name="Observed_value" required>
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Guardar Muestra</button>
-                <a href="{{ route('muestreos.index') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Cancelar</a>
+                <button type="submit" class="btn btn-success">Guardar Muestra</button>
+                <a href="{{ route('muestreos.index') }}" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
     </div>
-
 @endsection

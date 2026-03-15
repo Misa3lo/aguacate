@@ -9,37 +9,29 @@
             @csrf
 
             <div class="form-group">
-                <label for="nombre"><i class="fas fa-id-card"></i> Nombre Completo:</label>
-                <input type="text" id="nombre" name="nombre" value="{{ old('nombre') }}" required>
-                @error('nombre')
-                <p class="error-message">{{ $message }}</p>
-                @enderror
+                <label for="Name"><i class="fas fa-id-card"></i> Nombre Completo:</label>
+                {{-- name="Name" en lugar de "nombre" --}}
+                <input type="text" id="Name" name="Name" value="{{ old('Name') }}" required>
+                @error('Name') <p class="error-message">{{ $message }}</p> @enderror
             </div>
 
             <div class="form-group">
-                <label for="telefono"><i class="fas fa-phone"></i> Teléfono:</label>
-                <input type="text" id="telefono" name="telefono" value="{{ old('telefono') }}" required>
-                @error('telefono')
-                <p class="error-message">{{ $message }}</p>
-                @enderror
+                <label for="Phone"><i class="fas fa-phone"></i> Teléfono:</label>
+                {{-- name="Phone" en lugar de "telefono" --}}
+                <input type="text" id="Phone" name="Phone" value="{{ old('Phone') }}" required>
+                @error('Phone') <p class="error-message">{{ $message }}</p> @enderror
             </div>
 
             <div class="form-group">
-                <label for="password"><i class="fas fa-lock"></i> Contraseña:</label>
-                <input type="password" id="password" name="password" required>
-                @error('password')
-                <p class="error-message">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="form-group">
-                <label for="password_confirmation"><i class="fas fa-lock-open"></i> Confirmar Contraseña:</label>
-                <input type="password" id="password_confirmation" name="password_confirmation" required>
+                <label for="Password"><i class="fas fa-lock"></i> Contraseña:</label>
+                {{-- name="Password" en lugar de "password" --}}
+                <input type="password" id="Password" name="Password" required>
+                @error('Password') <p class="error-message">{{ $message }}</p> @enderror
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn btn-success"><i class="fas fa-user-check"></i> Registrar Dueño</button>
-                <a href="{{ route('usuarios.index') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Cancelar</a>
+                <button type="submit" class="btn btn-success">Registrar Dueño</button>
+                <a href="{{ route('usuarios.index') }}" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
     </div>

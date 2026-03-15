@@ -1,67 +1,68 @@
 @extends('layouts.app')
 
-@section('title', 'Editar Muestra ID: ' . $muestreo->id)
+@section('title', 'Editar Muestra ID: ' . $muestreo->Id)
 
 @section('content')
 
     <div class="card-form">
-        <form action="{{ route('muestreos.update', $muestreo->id) }}" method="POST">
+        <form action="{{ route('muestreos.update', $muestreo->Id) }}" method="POST">
             @csrf
             @method('PUT')
 
+            {{-- 1. Selección de Parcela --}}
             <div class="form-group">
-                <label for="parcela_id"><i class="fas fa-map-marked-alt"></i> Parcela:</label>
-                <select id="parcela_id" name="parcela_id" required>
-                    <option value="">-- Seleccione una Parcela --</option>
+                <label for="Plot_id"><i class="fas fa-map-marked-alt"></i> Parcela:</label>
+                <select id="Plot_id" name="Plot_id" required>
                     @foreach ($parcelas as $parcela)
-                        <option value="{{ $parcela->id }}"
-                            {{ old('parcela_id', $muestreo->parcela_id) == $parcela->id ? 'selected' : '' }}>
-                            ID: {{ $parcela->id }} - {{ $parcela->direccion }}
+                        <option value="{{ $parcela->Id }}"
+                            {{ old('Plot_id', $muestreo->Plot_id) == $parcela->Id ? 'selected' : '' }}>
+                            ID: {{ $parcela->Id }} - Árboles: {{ $parcela->Tree_count }} (Lat: {{ $parcela->Latitude }})
                         </option>
                     @endforeach
                 </select>
-                @error('parcela_id')
+                @error('Plot_id')
                 <p class="error-message">{{ $message }}</p>
                 @enderror
             </div>
 
+            {{-- 2. Selección de Nutriente (Elemento) --}}
             <div class="form-group">
-                <label for="elemento_id"><i class="fas fa-flask"></i> Nutriente (Elemento):</label>
-                <select id="elemento_id" name="elemento_id" required>
-                    <option value="">-- Seleccione un Nutriente --</option>
+                <label for="Element_id"><i class="fas fa-flask"></i> Nutriente (Elemento):</label>
+                <select id="Element_id" name="Element_id" required>
                     @foreach ($elementos as $elemento)
-                        <option value="{{ $elemento->id }}"
-                            {{ old('elemento_id', $muestreo->elemento_id) == $elemento->id ? 'selected' : '' }}>
-                            {{ $elemento->nombre }} ({{ $elemento->unidad }})
+                        <option value="{{ $elemento->Id }}"
+                            {{ old('Element_id', $muestreo->Element_id) == $elemento->Id ? 'selected' : '' }}>
+                            {{ $elemento->Name }} ({{ $elemento->Unit }})
                         </option>
                     @endforeach
                 </select>
-                @error('elemento_id')
+                @error('Element_id')
                 <p class="error-message">{{ $message }}</p>
                 @enderror
             </div>
 
+            {{-- 3. Selección de Revisión --}}
             <div class="form-group">
-                <label for="revision_id"><i class="fas fa-calendar-check"></i> Revisión (Fecha de toma de muestra):</label>
-                <select id="revision_id" name="revision_id" required>
-                    <option value="">-- Seleccione la Revisión --</option>
+                <label for="Review_id"><i class="fas fa-calendar-check"></i> Fecha de Revisión:</label>
+                <select id="Review_id" name="Review_id" required>
                     @foreach ($revisiones as $revision)
-                        <option value="{{ $revision->id }}"
-                            {{ old('revision_id', $muestreo->revision_id) == $revision->id ? 'selected' : '' }}>
-                            ID: {{ $revision->id }} - {{ \Carbon\Carbon::parse($revision->fecha_revision)->format('d/m/Y') }} (Parcela ID: {{ $revision->parcela_id }})
+                        <option value="{{ $revision->Id }}"
+                            {{ old('Review_id', $muestreo->Review_id) == $revision->Id ? 'selected' : '' }}>
+                            Revisión #{{ $revision->Id }} - {{ \Carbon\Carbon::parse($revision->Review_date)->format('d/m/Y') }}
                         </option>
                     @endforeach
                 </select>
-                @error('revision_id')
+                @error('Review_id')
                 <p class="error-message">{{ $message }}</p>
                 @enderror
             </div>
 
+            {{-- 4. Valor Observado --}}
             <div class="form-group">
-                <label for="valor_observado"><i class="fas fa-chart-bar"></i> Valor Observado (Medición real):</label>
-                <input type="number" step="0.0001" id="valor_observado" name="valor_observado"
-                       value="{{ old('valor_observado', $muestreo->valor_observado) }}" required>
-                @error('valor_observado')
+                <label for="Observed_value"><i class="fas fa-vial"></i> Valor Observado (Medición):</label>
+                <input type="number" step="0.0001" id="Observed_value" name="Observed_value"
+                       value="{{ old('Observed_value', $muestreo->Observed_value) }}" required>
+                @error('Observed_value')
                 <p class="error-message">{{ $message }}</p>
                 @enderror
             </div>

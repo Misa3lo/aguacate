@@ -9,24 +9,22 @@
             @csrf
 
             <div class="form-group">
-                <label for="nombre"><i class="fas fa-tag"></i> Nombre del Nutriente:</label>
-                <input type="text" id="nombre" name="nombre" value="{{ old('nombre') }}" required>
-                @error('nombre')
-                <p class="error-message">{{ $message }}</p>
-                @enderror
+                <label for="Name"><i class="fas fa-tag"></i> Nombre del Nutriente:</label>
+                {{-- name="Name" para coincidir con el controlador --}}
+                <input type="text" id="Name" name="Name" value="{{ old('Name') }}" placeholder="Ej. Nitrógeno" required>
+                @error('Name') <p class="error-message">{{ $message }}</p> @enderror
             </div>
 
             <div class="form-group">
-                <label for="unidad"><i class="fas fa-ruler"></i> Unidad de Medida (Ej. ppm, %):</label>
-                <input type="text" id="unidad" name="unidad" value="{{ old('unidad') }}" required>
-                @error('unidad')
-                <p class="error-message">{{ $message }}</p>
-                @enderror
+                <label for="Unit"><i class="fas fa-ruler"></i> Unidad de Medida:</label>
+                {{-- name="Unit" --}}
+                <input type="text" id="Unit" name="Unit" value="{{ old('Unit') }}" placeholder="Ej. % o ppm" required>
+                @error('Unit') <p class="error-message">{{ $message }}</p> @enderror
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Guardar Nutriente</button>
-                <a href="{{ route('elementos.index') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Cancelar</a>
+                <button type="submit" class="btn btn-success">Guardar Nutriente</button>
+                <a href="{{ route('elementos.index') }}" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
     </div>

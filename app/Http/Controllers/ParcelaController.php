@@ -3,92 +3,80 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Parcela;
-use App\Models\Usuario; // Necesario para la lista de dueños
+use App\Models\Plot;
+use App\Models\UserPlot;
+use App\Models\Locality; // <--- Importa el modelo aquí
 
 class ParcelaController extends Controller
 {
-    /**
-     * Muestra la lista de todas las parcelas.
-     */
     public function index()
     {
-        // Obtener todas las parcelas, cargando la relación con el usuario (dueño)
-        $parcelas = Parcela::with('usuario')->get();
-
+        // Cargamos la relación para mostrar el nombre del dueño en la tabla
+        $parcelas = Plot::with('userPlot')->get();
         return view('parcelas.index', compact('parcelas'));
     }
 
-    /**
-     * Muestra el formulario para crear una nueva parcela.
-     */
     public function create()
     {
-        // Necesitamos la lista de usuarios para el <select> en el formulario
-        $usuarios = Usuario::all();
+        $usuarios = UserPlot::all();
+        $localidades = Locality::all(); // <--- Obtén todas las localidades de la base de datos
 
-        return view('parcelas.create', compact('usuarios'));
+        // Pásalas a la vista usando compact
+        return view('parcelas.create', compact('usuarios', 'localidades'));
     }
 
-    /**
-     * Almacena una nueva parcela en la base de datos.
-     */
     public function store(Request $request)
     {
-        // 1. Validación de los datos
         $request->validate([
-            'usuario_id' => 'required|exists:usuario,id', // Debe existir un usuario con ese ID
-            'coordenada_gps' => 'required|string|max:255',
-            'direccion' => 'required|string|max:255',
-            'extension_ha' => 'required|numeric|min:0',
-            'num_arboles' => 'nullable|integer|min:0',
+            'User_plot_id' => 'required|exists:users_plot,Id',
+            'Locality_id'  => 'required', // Verifica que tengas registros en la tabla localities
+            'Latitude'     => 'required|numeric',
+            'Longitude'    => 'required|numeric',
+            'Area_ha'      => 'required|numeric|min:0',
+            'Tree_count'   => 'required|integer|min:0',
         ]);
 
-        // 2. Creación del registro
-        Parcela::create($request->all());
+        // Al usar $request->all(), Laravel mapea los nombres del HTML con el $fillable
+        Plot::create($request->all());
 
-        // 3. Redirección y mensaje
-        return redirect()->route('parcelas.index')->with('success', 'Parcela registrada exitosamente.');
+        return redirect()->route('parcelas.index')
+            ->with('success', 'Huerto registrado correctamente.');
     }
 
-    /**
-     * Muestra el formulario para editar una parcela específica.
-     */
-    public function edit(Parcela $parcela)
+    public function edit($id)
     {
-        // Necesitamos la lista de usuarios para el <select>
-        $usuarios = Usuario::all();
+        $parcela = Plot::findOrFail($id);
+        $usuarios = UserPlot::all();
+        $localidades = Locality::all(); // <--- También es necesario para la vista de edición
 
-        return view('parcelas.edit', compact('parcela', 'usuarios'));
+        return view('parcelas.edit', compact('parcela', 'usuarios', 'localidades'));
     }
 
-    /**
-     * Actualiza la parcela especificada en la base de datos.
-     */
-    public function update(Request $request, Parcela $parcela)
+    public function update(Request $request, $id)
     {
-        // 1. Validación de los datos
+        $parcela = Plot::findOrFail($id);
+
         $request->validate([
-            'usuario_id' => 'required|exists:usuario,id',
-            'coordenada_gps' => 'required|string|max:255',
-            'direccion' => 'required|string|max:255',
-            'extension_ha' => 'required|numeric|min:0',
-            'num_arboles' => 'nullable|integer|min:0',
+            'User_plot_id' => 'required|exists:users_plot,Id',
+            'Locality_id'  => 'required',
+            'Latitude'     => 'required|numeric',
+            'Longitude'    => 'required|numeric',
+            'Area_ha'      => 'required|numeric|min:0',
+            'Tree_count'   => 'required|integer|min:0',
         ]);
 
-        // 2. Actualización del registro
         $parcela->update($request->all());
 
-        // 3. Redirección y mensaje
-        return redirect()->route('parcelas.index')->with('success', 'Parcela actualizada exitosamente.');
+        return redirect()->route('parcelas.index')
+            ->with('success', 'Información del huerto actualizada.');
     }
 
-    /**
-     * Elimina la parcela especificada.
-     */
-    public function destroy(Parcela $parcela)
+    public function destroy($id)
     {
+        $parcela = Plot::findOrFail($id);
         $parcela->delete();
-        return redirect()->route('parcelas.index')->with('success', 'Parcela eliminada correctamente.');
+
+        return redirect()->route('parcelas.index')
+            ->with('success', 'Huerto eliminado.');
     }
 }

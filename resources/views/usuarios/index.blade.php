@@ -31,29 +31,35 @@
                 </tr>
                 </thead>
                 <tbody>
+                {{-- Fragmento de la tabla en index.blade.php --}}
                 @foreach ($usuarios as $usuario)
                     <tr>
-                        <td><span class="text-muted">#{{ $usuario->id }}</span></td>
-                        <td><span class="fw-bold text-dark">{{ $usuario->nombre }}</span></td>
-                        <td>{{ $usuario->telefono }}</td>
-                        <td>{{ $usuario->created_at?->format('d/m/Y') ?? 'N/A' }}</td>
+                        {{-- Cambio de $usuario->id a $usuario->Id --}}
+                        <td><span class="text-muted">#{{ $usuario->Id }}</span></td>
+                        {{-- Cambio de $usuario->nombre a $usuario->Name --}}
+                        <td><strong>{{ $usuario->Name }}</strong></td>
+                        {{-- Cambio de $usuario->telefono a $usuario->Phone --}}
+                        <td>{{ $usuario->Phone }}</td>
+                        {{-- En tu tabla de usuarios --}}
                         <td>
+                            @if($usuario->Created_at)
+                                {{-- Formato: 2026-03-15 14:30 --}}
+                                {{ $usuario->Created_at->format('Y-m-d H:i:s') }}
+                            @else
+                                <span class="text-muted">No registrada</span>
+                            @endif
+                        </td>                        <td>
                             <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('usuarios.edit', $usuario->id) }}"
-                                   class="btn btn-secondary btn-sm"
-                                   title="Editar Información">
+                                {{-- Uso de $usuario->Id para las rutas --}}
+                                <a href="{{ route('usuarios.edit', $usuario->Id) }}" class="btn btn-secondary btn-sm">
                                     <i class="fas fa-edit"></i>
                                 </a>
 
-                                <form action="{{ route('usuarios.destroy', $usuario->id) }}"
-                                      method="POST"
-                                      class="d-inline-block">
+                                <form action="{{ route('usuarios.destroy', $usuario->Id) }}" method="POST" class="d-inline-block">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit"
-                                            class="btn btn-danger btn-sm"
-                                            title="Eliminar Registro"
-                                            onclick="return confirm('¿Está seguro de que desea eliminar al usuario {{ $usuario->nombre }}? Esta acción no se puede deshacer.')">
+                                    <button type="submit" class="btn btn-danger btn-sm"
+                                            onclick="return confirm('¿Eliminar a {{ $usuario->Name }}?')">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </form>

@@ -27,15 +27,15 @@
         @endif
 
         <div class="form-group">
-            <label for="telefono"><i class="fas fa-phone"></i> Teléfono (Usuario)</label>
-            <input type="text" id="telefono" name="telefono"
+            <label for="Phone"><i class="fas fa-phone"></i> Teléfono (Usuario)</label>
+            <input type="text" id="Phone" name="Phone"
                    placeholder="Ingresa tu número"
-                   value="{{ old('telefono') }}" required autofocus>
+                   value="{{ old('Phone') }}" required autofocus>
         </div>
 
         <div class="form-group">
-            <label for="password"><i class="fas fa-lock"></i> Contraseña</label>
-            <input type="password" id="password" name="password"
+            <label for="Password"><i class="fas fa-lock"></i> Contraseña</label>
+            <input type="Password" id="Password" name="Password"
                    placeholder="••••••••" required>
         </div>
 

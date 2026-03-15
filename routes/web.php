@@ -12,7 +12,7 @@ use App\Http\Controllers\RevisionParcelaController;
 use App\Http\Controllers\ParcelaElementoController;
 use App\Http\Controllers\AnalisisElementoController;
 use App\Http\Controllers\RecomendacionAplicacionController;
-
+use App\Http\Controllers\InicioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,9 +38,7 @@ Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware('auth')->group(function () {
 
     // Ruta de inicio (Dashboard)
-    Route::get('/', function () {
-        return view('inicio');
-    })->name('inicio');
+    Route::get('/', [InicioController::class, 'index'])->name('inicio');
 
 
     // Rutas de Recursos (CRUD)
@@ -52,7 +50,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('muestreos', ParcelaElementoController::class);
 
     // Rutas de Resultados (Solo Index)
-    Route::resource('analisis', AnalisisElementoController::class)->only(['index']);
+// routes/web.php
+    Route::resource('analisis', AnalisisElementoController::class)
+        ->parameters(['analisis' => 'id']) // <--- ESTO ES LA CLAVE
+        ->only(['index', 'show', 'destroy']);
     Route::resource('recomendaciones', RecomendacionAplicacionController::class)->only(['index']);
 
 });
